@@ -9,7 +9,8 @@ export default function AddClassPage() {
 
     const [classCode, setClassCode] = useState("");
     const [className, setClassName] = useState("");
-    const [classHours, setClassHours] = useState("");
+    const [classHours, setClassHours] = useState(0);
+    const [classAbsence, setClassAbsence] = useState(0);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
@@ -31,7 +32,7 @@ export default function AddClassPage() {
                 await setDoc(doc(db, "classes", classId), {
                     code: classCode,
                     name: className,
-                    hours: Number(classHours), 
+                    weeklyHours: Number(classHours), 
                     userID: user.uid, 
                 });
 
@@ -74,6 +75,12 @@ export default function AddClassPage() {
                     value={classHours}
                     onChange={(e) => setClassHours(e.target.value)}
                 />
+                <input
+                    type="number"
+                    placeholder="Absence"
+                    value={classAbsence}
+                    onChange={(e) => setClassAbsence(e.target.value)}
+                />
                 <div className="add-class-button-container">
                     <button className="add-class-button" type="submit">Add</button>
                 </div>
@@ -81,7 +88,7 @@ export default function AddClassPage() {
             </form>
 
             <div className="go-to-main-button-container">
-                <button className="go-to-main-button" onClick={() => navigate("/main")}></button>
+                <button onClick={() => navigate("/main")}>Class List</button>
             </div>
 
 
