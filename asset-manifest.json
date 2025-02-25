@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/%7Battendance%7D/static/css/main.a324e4af.css",
+    "main.js": "/%7Battendance%7D/static/js/main.f9863eba.js",
+    "static/js/453.9022dc6c.chunk.js": "/%7Battendance%7D/static/js/453.9022dc6c.chunk.js",
+    "index.html": "/%7Battendance%7D/index.html",
+    "main.a324e4af.css.map": "/%7Battendance%7D/static/css/main.a324e4af.css.map",
+    "main.f9863eba.js.map": "/%7Battendance%7D/static/js/main.f9863eba.js.map",
+    "453.9022dc6c.chunk.js.map": "/%7Battendance%7D/static/js/453.9022dc6c.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a324e4af.css",
+    "static/js/main.f9863eba.js"
+  ]
+}
