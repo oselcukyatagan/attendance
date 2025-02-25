@@ -8,7 +8,7 @@ import SignUpPage from './Pages/SignUpPage';
 
 function App() {
   return (
-    <Router>
+    <Router basename="/attendance">
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/add" element={<AddClassPage />} />
