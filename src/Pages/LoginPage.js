@@ -2,7 +2,7 @@
 import {auth} from "../firebase"
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
 
@@ -45,6 +45,7 @@ export default function LoginPage() {
                 <button type="submit"> Login </button>
                 </div>
                 {error && <span style={{color:"red"}}>Wrong email or password.</span>}
+                <p>Don't have an account? <Link to="/signUp">Sign up.</Link></p>
             </form>
         </div>
 

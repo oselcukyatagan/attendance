@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { doc, setDoc } from "firebase/firestore"; 
 import { db } from "../firebase";
 import { auth } from "../firebase";
 import { v4 as uuidv4 } from "uuid"; // For generating unique IDs
 import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs } from "firebase/firestore";
 
 export default function AddClassPage() {
 
@@ -13,19 +14,49 @@ export default function AddClassPage() {
     const [classAbsence, setClassAbsence] = useState(0);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [numberOfClasses, setNumberOfClasses] = useState(0);
+    const classLimit = 10;
+
+    useEffect(() => {
+        const fetchClassCount = async () => {
+            const user = auth.currentUser;
+            if (!user) return;
+
+            try {
+                const q = query(collection(db, "classes"), where("userID", "==", user.uid));
+                const querySnapshot = await getDocs(q);
+                setNumberOfClasses(querySnapshot.size); 
+            } catch (error) {
+                console.error("Error fetching class count:", error);
+                setError("Failed to fetch class data.");
+            }
+        };
+
+        fetchClassCount();
+    }, []);
 
     const handleAdd = async (e) => {
 
         e.preventDefault();
 
+        if (numberOfClasses >= classLimit) {
+            setError(`You have reached the class limit of ${classLimit}.`);
+            return;
+        }
+
         if (!classCode || !className || !classHours) {
             setError("Please fill out all fields.");
+            return;
+        }
+        if(classHours == 0 || classHours > 10) {
+            setError("Please select a valid hour.")
             return;
         }
 
         const user = auth.currentUser;
 
         if (user) {
+
             try {
                 const classId = uuidv4();
 

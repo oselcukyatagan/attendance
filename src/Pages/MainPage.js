@@ -45,7 +45,7 @@ export default function MainPage() {
     }, []);
 
     const classCards = classes.map((item) => (
-        <div className="card">
+        <div className="card" style={item.percentage <= 80 ? { backgroundColor: "red" } : {}}>
             <div
                 key={item.id} 
                 className="card-class-info"
@@ -54,7 +54,7 @@ export default function MainPage() {
                 <p>Code: {item.code}</p>
                 <p>Hours in a week: {item.hours}</p>
             </div>
-            <div style={item.percentage <= 80 ? { backgroundColor: "red" } : {}}>
+            <div>
                 <p>absence: {item.absence}, percentage: {item.percentage.toFixed(2)}%</p>
             </div>
         </div>
