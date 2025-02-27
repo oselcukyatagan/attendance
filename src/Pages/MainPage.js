@@ -8,19 +8,33 @@ export default function MainPage() {
 
     const [classes, setClasses] = useState([]);
     const navigate = useNavigate();
+    const [error, setError] = useState("");
    
-    const handleUpdateAbsence = async (classId, newAbsence) => {
+    const handleUpdateAbsence = async (classId, newAbsence, classHours) => {
         const user = auth.currentUser;
+        
         if (!user) {
             console.error("User not logged in.");
             return;
         }
 
+        const setErrorWithTimeout = (message) => {
+            setError(message); // Set the error message
+            setTimeout(() => {
+                setError(""); // Clear the error message after 1 second
+            }, 1000);
+        };
+
+        // Validation for absence
+        if (newAbsence === -1 || newAbsence === classHours * 14) {
+            setErrorWithTimeout("Invalid absence.");
+            console.error("Invalid absence.");
+            return;
+        }
+
         try {
             const classRef = doc(db, "classes", classId);
-            await updateDoc(classRef, {
-                absence: newAbsence,
-            });
+            await updateDoc(classRef, { absence: newAbsence });
 
             // Update local state without fetching all classes again
             setClasses((prevClasses) => 
@@ -35,11 +49,9 @@ export default function MainPage() {
         } catch (err) {
             console.error("Error updating absence.", err);
         }
-    }; 
+    };
 
-
-    useEffect(() => {
-        
+     useEffect(() => {
         const fetchClasses = async () => {
 
             const user = auth.currentUser;
@@ -75,32 +87,30 @@ export default function MainPage() {
     }, []);
 
     const classCards = classes.map((item) => (
-        <div style={{display:"flex", flexDirection:"row"}}>
-        <div className="card" style={item.percentage <= 80 ? { backgroundColor: "red" } : {}}>
-            <div
-                key={item.id} 
-                className="card-class-info"
-            >
-                <h3>{item.name}</h3>
-                <p>Code: {item.code}</p>
-                <p>Hours in a week: {item.hours}</p>
+        <div key={item.id} style={{ display: "flex", flexDirection: "row" }}>
+            <div className="card" style={item.percentage <= 80 ? { backgroundColor: "red" } : {}}>
+                <div className="card-class-info">
+                    <h3>{item.name}</h3>
+                    <p>Code: {item.code}</p>
+                    <p>Hours in a week: {item.hours}</p>
+                </div>
+                <div>
+                    <p>absence: {item.absence}, percentage: {item.percentage.toFixed(2)}%</p>
+                </div>
             </div>
-            <div>
-                <p>absence: {item.absence}, percentage: {item.percentage.toFixed(2)}%</p>
+            <div className="card-buttons-container">
+                <button onClick={() => handleUpdateAbsence(item.id, item.absence + 1, item.hours)}>Absence++</button>
+                <button onClick={() => handleUpdateAbsence(item.id, item.absence - 1, item.hours)}>Absence--</button>
+                <button onClick={() => handleUpdateAbsence(item.id, 0, item.hours)}>Reset Absence</button>
             </div>
-        </div>
-        <div className="card-buttons-container">
-            <button onClick={() => handleUpdateAbsence(item.id, item.absence + 1)}>Absence+</button>
-            <button onClick={() => handleUpdateAbsence(item.id, item.absence - 1)}>Absence-</button>
-            <button onClick={() => handleUpdateAbsence(item.id, 0)}>Reset Absence</button>
-        </div>
         </div>
     ));
 
     return (
         <div>
-            <h1 >My Classes</h1>
+            <h1>My Classes</h1>
             <div className="card-holder">
+                {error && <div className="error-message">{error}</div>}
                 {classCards}
             </div>
         </div>
