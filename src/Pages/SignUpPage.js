@@ -7,7 +7,7 @@ export default function SignUpPage() {
 
     const [email,setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState(false);
+    const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleSignUp = (e) => {
@@ -20,12 +20,17 @@ export default function SignUpPage() {
             // Signed up 
             const user = userCredential.user;
             console.log("User created succesfully.")
+            navigate("/")
+
             // ...
         })
         .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             // ..
+            setError("Error creating user.");
+            
+
             
         });
 
@@ -37,12 +42,12 @@ export default function SignUpPage() {
             <h1>Sign Up Page</h1>
 
             <form onSubmit={handleSignUp}>
-                <input type="email" placeholder="email" onChange={(e) => setEmail(e.target.value)} />
-                <input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+                <input type="email" placeholder="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 <div style={{width:"10rem", height:"2rem"}} className="sign-button">
-                <button style={{width:"90%", height:"80%"}}type="submit"> Sign up. </button>
+                <button style={{width:"90%", height:"80%"}}type="submit"> Sign up </button>
                 </div>
-                {error && <span style={{color:"red"}}>Wrong email or password.</span>}
+                {(error != null) && <span style={{color:"red"}}>{error}</span>}
                 <p>Click the link to return to login page. <Link to="/">Click</Link></p>
             </form>
         </div>
