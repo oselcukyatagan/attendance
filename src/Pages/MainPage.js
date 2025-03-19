@@ -1,7 +1,7 @@
 import { db } from "../firebase";
 import { auth } from "../firebase";
 import React, { useEffect, useState } from "react";
-import { collection, query, where, getDocs, doc, updateDoc } from "firebase/firestore";
+import { collection, query, where, getDocs, doc, updateDoc, deleteDoc} from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
 export default function MainPage() {
@@ -9,6 +9,7 @@ export default function MainPage() {
     const [classes, setClasses] = useState([]);
     const navigate = useNavigate();
     const [error, setError] = useState("");
+    const [shouldFetchClasses, setShouldFetchClasses] = useState(false);
    
     const handleUpdateAbsence = async (classId, newAbsence, classHours) => {
         const user = auth.currentUser;
@@ -84,7 +85,19 @@ export default function MainPage() {
         };
 
         fetchClasses();
-    }, []);
+    }, [shouldFetchClasses]);
+
+    const deleteClass = async(classId) => {
+        const isSure = window.confirm("Are you sure you want to delete this class? This action cannot be undone.");
+
+        if(isSure){
+        await deleteDoc(doc(db, "classes", classId));
+        setShouldFetchClasses(prev => !prev);
+    }
+
+    }
+    
+
 
     const classCards = classes.map((item) => (
         <div key={item.id} style={{ display: "flex", flexDirection: "row" }}>
@@ -102,6 +115,7 @@ export default function MainPage() {
                 <button onClick={() => handleUpdateAbsence(item.id, item.absence + 1, item.hours)}>Absence++</button>
                 <button onClick={() => handleUpdateAbsence(item.id, item.absence - 1, item.hours)}>Absence--</button>
                 <button onClick={() => handleUpdateAbsence(item.id, 0, item.hours)}>Reset Absence</button>
+                <button onClick={() => deleteClass(item.id)}>Delete Class</button>
             </div>
         </div>
     ));

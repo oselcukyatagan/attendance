@@ -6,6 +6,8 @@ import { v4 as uuidv4 } from "uuid"; // For generating unique IDs
 import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
+// TODO add message log when succesfully add the class.
+
 export default function AddClassPage() {
 
     const [classCode, setClassCode] = useState("");
@@ -64,7 +66,8 @@ export default function AddClassPage() {
                     code: classCode,
                     name: className,
                     weeklyHours: Number(classHours), 
-                    userID: user.uid, 
+                    absence: Number(classAbsence),
+                    userID: user.uid
                 });
 
                 console.log("Class added.");
