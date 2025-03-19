@@ -10,8 +10,8 @@ export default function AddClassPage() {
 
     const [classCode, setClassCode] = useState("");
     const [className, setClassName] = useState("");
-    const [classHours, setClassHours] = useState(0);
-    const [classAbsence, setClassAbsence] = useState(0);
+    const [classHours, setClassHours] = useState(null);
+    const [classAbsence, setClassAbsence] = useState(null);
     const [error, setError] = useState("");
     const navigate = useNavigate();
     const [numberOfClasses, setNumberOfClasses] = useState(0);
@@ -72,7 +72,7 @@ export default function AddClassPage() {
 
                 setClassCode("");
                 setClassName("");
-                setClassHours("");
+                setClassHours(null);
             } catch (err) {
                 console.error("Error adding class:", err);
                 setError("Failed to add class.");
